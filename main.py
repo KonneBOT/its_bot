@@ -1,7 +1,7 @@
 
 import os
 from dotenv import load_dotenv
-from discord import Intents, Client, Message
+from discord import Intents, Client, Message, errors
 from responses import get_response
 
 # Load Toaken from Safe File
@@ -26,8 +26,10 @@ async def send_message(message: Message, user_message: str) -> None:
     try:
         response: str = get_response(user_message)
         await message.author.send(response) if is_private else await message.channel.send(response)  # If private -> Author, else -> Channel
-    except Exception as e:
+    except errors.HTTPException as e:   # for HTTP Errors wie Bat Requests
         print(e)
+    except Exception as e:
+        print(e, type(e))
 
 # Startup Handling
 @client.event
@@ -39,6 +41,12 @@ async def on_ready() -> None:
 async def on_message(message: Message) -> None:
     if message.author == client.user:   # If the message is from the bot itself, stfu
         return
+    
+    if "vdi" in message.content.lower():
+        if "nicht retten" in message.content.lower():
+            await message.add_reaction('💥')
+        else:
+            await message.add_reaction('❌')
     
     username: str = message.author.name # get Username we're talking to
     user_message: str = message.content # get the message content
