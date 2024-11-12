@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from discord import Intents, Client, Message, errors, Interaction
+from discord import Intents, Client, Message, errors, Interaction, Object
 from responses import get_response
 from discord import app_commands
 from roles import add_sem_roles
@@ -39,6 +39,11 @@ async def send_message(message: Message, user_message: str) -> None:
 @client.event
 async def on_ready() -> None:
     print(f'{client.user} has connected to Discord!')
+    try:        
+        await tree.sync(guild=Object(id="1305824039557791834")) # Sync the Commands
+        print("Synced")
+    except Exception as e:
+        print(e)
 
 # Message Handling
 @client.event
