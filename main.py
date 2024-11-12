@@ -1,8 +1,11 @@
 import os
 from dotenv import load_dotenv
-from discord import Intents, Client, Message, errors, Interaction, Object
-from responses import get_response
+
+import discord
+from discord.ext import commands
 from discord import app_commands
+
+from responses import get_response
 from roles import add_sem_roles
 
 # Load Toaken from Safe File
@@ -10,13 +13,13 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 # Intents Setup
-intents: Intents = Intents.all()
-client: Client = Client(intents=intents)
+intents = discord.Intents.all()
+client = discord.Client(intents=intents, command_prefix="uwu")
 tree = app_commands.CommandTree(client)
-
+GUILD_ID = discord.Object(id="1305824039557791834")
 
 # Message Functionality
-async def send_message(message: Message, user_message: str) -> None:
+async def send_message(message: discord.message, user_message: str) -> None:
     if not user_message: # If user_message is empty
         print('(Message is empty, maybe intents not enabled?)')
         return
@@ -40,14 +43,14 @@ async def send_message(message: Message, user_message: str) -> None:
 async def on_ready() -> None:
     print(f'{client.user} has connected to Discord!')
     try:        
-        await tree.sync(guild=Object(id="1305824039557791834")) # Sync the Commands
+        await tree.sync(guild=GUILD_ID) # Sync the Commands
         print("Synced")
     except Exception as e:
         print(e)
 
 # Message Handling
 @client.event
-async def on_message(message: Message) -> None:
+async def on_message(message: discord.message) -> None:
     if message.author == client.user:   # If the message is from the bot itself, stfu
         return
     
@@ -65,8 +68,9 @@ async def on_message(message: Message) -> None:
     await send_message(message, user_message) # send the message to the send_message function / to Console
 
 # Slash Command to Assign Roles
-@tree.command(name="assign_roles", description="Assign roles based on existing roles")
-async def assign_roles(interaction: Interaction):
+@tree.command(name="assign_roles", description="Assign roles based on existing roles", guild=GUILD_ID)
+@app_commands.checks.has_permissions(administrator=True)
+async def assign_roles(interaction: discord.Interaction):
     for member in interaction.guild.members:
         await add_sem_roles(member)
     await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
