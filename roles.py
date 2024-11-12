@@ -53,3 +53,16 @@ async def add_sem_roles(member: discord.Member) -> None:
         print(f"Added role '{sem+1}. Sem - WIN' to {member.name}")
 
     return
+
+async def remove_double_sem_roles(member: discord.Member) -> None:
+    roles = [role.name for role in member.roles]
+    print(f"Member: {member.name}, Roles: {roles}")
+    sem = None
+    if "1. Semester" in roles:
+        sem = 0
+    elif "2. Semester" in roles:
+        sem = 1
+    elif "3. Semester" in roles:
+        sem = 2
+    elif "4. Semester" in roles:
+        sem = 3
