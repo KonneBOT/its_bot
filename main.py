@@ -90,7 +90,7 @@ async def on_member_update(before: discord.Member, after: discord.Member) -> Non
         return
     await add_sem_roles(after)
 
-@tree.command(name="assign_roles_channel", description="Assign to Channels to limit access of other roles ", guild=GUILD_ID)
+@tree.command(name="assign_role_channel", description="Assign to Channels to limit access of other roles ", guild=GUILD_ID)
 @app_commands.checks.has_permissions(administrator=True)
 async def assign_roles_channel(interaction: discord.Interaction, role: discord.Role):
     await edit_per_channel(interaction.channel, role)
