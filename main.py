@@ -10,9 +10,7 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 # Intents Setup
-intents: Intents = Intents.default()
-intents.message_content = True
-intents.members = True
+intents: Intents = Intents.all()
 client: Client = Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
@@ -29,8 +27,10 @@ async def send_message(message: Message, user_message: str) -> None:
 
     try:
         response: str = get_response(user_message)
+        if not response: # If response is empty
+            return
         await message.author.send(response) if is_private else await message.channel.send(response)  # If private -> Author, else -> Channel
-    except errors.HTTPException as e:   # for HTTP Errors wie Bat Requests
+    except errors.HTTPException as e:   # for HTTP Errors wie Bad Requests
         print(e)
     except Exception as e:
         print(e, type(e))

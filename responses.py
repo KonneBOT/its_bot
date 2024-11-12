@@ -4,7 +4,7 @@ def get_response(user_input: str) -> str:
     lowered: str = user_input.lower()
 
     if lowered == "":
-        return 
+        return
     elif lowered == 'asdf':
         choice(['I do not understand.', 'I am not sure what you mean.', 'Could you rephrase that?'])
     elif 'hello' in lowered:
