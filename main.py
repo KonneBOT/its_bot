@@ -65,7 +65,8 @@ async def on_message(message: discord.message) -> None:
     user_message: str = message.content # get the message content
     channel: str = str(message.channel) # get the channel we're talking in
 
-    print(f'[{channel}] {username}: "{user_message}"') # print the message to the console
+    # print(f'[{channel}] {username}: "{user_message}"') # print the message to the console
+
     await send_message(message, user_message) # send the message to the send_message function / to Console
 
 # Slash Command to Assign Roles

@@ -13,5 +13,5 @@ def get_response(user_input: str) -> str:
         return "Goodbye!"
     elif 'hower' in lowered:
         return choice(['Der VDI wird Sie nicht retten!', 'Ja ne, das ist falsch', 'Denkste das ist richtig?', "Sehen und Hören Sie mich?"])
-    elif 'roll' in lowered:
+    elif 'roll' in lowered and not "rollen" in lowered:
         return f"You rolled a {randint(1, 6)}."

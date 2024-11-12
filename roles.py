@@ -24,7 +24,6 @@ async def add_sem_roles(member: discord.Member) -> None:
     role_maps = [role_map_sem1, role_map_sem2, role_map_sem3, role_map_sem4]
 
     roles = [role.name for role in member.roles]
-    print(f"Member: {member.name}, Roles: {roles}")
     sem = None
     if "1. Semester" in roles:
         sem = 0
@@ -56,7 +55,6 @@ async def add_sem_roles(member: discord.Member) -> None:
 
 async def remove_double_sem_roles(member: discord.Member) -> None:
     roles = [role.name for role in member.roles]
-    print(f"Member: {member.name}, Roles: {roles}")
     sem = None
     if "1. Semester" in roles:
         sem = 0
