@@ -1,8 +1,9 @@
-
 import os
 from dotenv import load_dotenv
-from discord import Intents, Client, Message, errors
+from discord import Intents, Client, Message, errors, Interaction
 from responses import get_response
+from discord import app_commands
+from roles import add_sem_roles
 
 # Load Toaken from Safe File
 load_dotenv()
@@ -10,8 +11,11 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 
 # Intents Setup
 intents: Intents = Intents.default()
-intents.message_content = True 
+intents.message_content = True
+intents.members = True
 client: Client = Client(intents=intents)
+tree = app_commands.CommandTree(client)
+
 
 # Message Functionality
 async def send_message(message: Message, user_message: str) -> None:
@@ -54,6 +58,13 @@ async def on_message(message: Message) -> None:
 
     print(f'[{channel}] {username}: "{user_message}"') # print the message to the console
     await send_message(message, user_message) # send the message to the send_message function / to Console
+
+# Slash Command to Assign Roles
+@tree.command(name="assign_roles", description="Assign roles based on existing roles")
+async def assign_roles(interaction: Interaction):
+    for member in interaction.guild.members:
+        await add_sem_roles(member)
+    await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
 
 # Run the Bot
 def main() -> None:
