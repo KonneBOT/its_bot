@@ -81,6 +81,13 @@ async def assign_roles(interaction: discord.Interaction):
         await add_sem_roles(member)
     await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
 
+# Check for member_updates to assign semester rules
+@client.event
+async def on_member_update(before: discord.Member, after: discord.Member) -> None:
+    if before.roles == after.roles:
+        return
+    await add_sem_roles(after)
+
 # Run the Bot
 def main() -> None:
     client.run(TOKEN)
