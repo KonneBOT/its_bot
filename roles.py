@@ -34,6 +34,14 @@ async def add_sem_roles(member: discord.Member) -> None:
         sem = 2
     elif "4. Semester" in roles:
         sem = 3
+    
+    if sem is None:
+        print(f"Member {member.name} has no semester role.")
+        return
+    if "ITS" not in roles and "TI" not in roles and "WIN" not in roles:
+        print(f"Member {member.name} has no course role.")
+        return
+
     if "ITS" in roles:
         await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem]["ITS"]))
         print(f"Added role '{sem+1}. Sem - ITS' to {member.name}")
