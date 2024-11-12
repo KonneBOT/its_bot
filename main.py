@@ -7,6 +7,7 @@ from discord import app_commands
 
 from responses import get_response
 from roles import add_sem_roles
+from channels import  edit_per_channel
 
 # Load Toaken from Safe File
 load_dotenv()
@@ -89,6 +90,11 @@ async def on_member_update(before: discord.Member, after: discord.Member) -> Non
         return
     await add_sem_roles(after)
 
+@tree.command(name="assign_roles_channel", description="Assign to Channels to limit access of other roles ", guild=GUILD_ID)
+@app_commands.checks.has_permissions(administrator=True)
+async def assign_roles_channel(interaction: discord.Interaction, roles: list):
+    for role in roles:
+        edit_per_channel(interaction.channel, role)
 # Run the Bot
 def main() -> None:
     client.run(TOKEN)
