@@ -94,7 +94,7 @@ async def on_member_update(before: discord.Member, after: discord.Member) -> Non
 @app_commands.checks.has_permissions(administrator=True)
 async def assign_roles_channel(interaction: discord.Interaction, role: discord.Role):
     try:
-        edit_per_channel(interaction.channel, role)
+        await edit_per_channel(interaction.channel, role)
         await interaction.response.send_message("Channel has been updated", ephemeral=True)
     except Exception as e:
         await interaction.response.send_message(e, ephemeral=True)
