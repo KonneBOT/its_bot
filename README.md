@@ -1,2 +1,3 @@
-# its_bot
-very nice Discord BOt uwU
+# ITS_Bot
+## Commands included:
+none :/
