@@ -1,6 +1,8 @@
 import discord
 
+role_numbers = None
 async def add_sem_roles(member: discord.Member) -> None:
+    global role_numbers
     role_map_sem1 = {
         "ITS": "1. Sem - ITS",
         "TI": "1. Sem - TI",
@@ -24,17 +26,10 @@ async def add_sem_roles(member: discord.Member) -> None:
     role_maps = [role_map_sem1, role_map_sem2, role_map_sem3, role_map_sem4]
 
     roles = [role.name for role in member.roles]
-    sem = None
-    if "1. Semester" in roles:
-        sem = 0
-    elif "2. Semester" in roles:
-        sem = 1
-    elif "3. Semester" in roles:
-        sem = 2
-    elif "4. Semester" in roles:
-        sem = 3
+
+    role_numbers = [int(role[:1]) for role in roles if role[:1].isdigit()]  # !!!! FÜR ITS DISCORD UMSTELLEN AUF [-1:] !!!!
     
-    if sem is None:
+    if role_numbers == []:  # Wenn keine Semesterrolle vorhanden ist
         print(f"Member {member.name} has no semester role.")
         return
     elif "ITS" not in roles and "TI" not in roles and "WIN" not in roles:
@@ -43,34 +38,37 @@ async def add_sem_roles(member: discord.Member) -> None:
     else:
         old_roles = [role.name for role in member.roles]
 
-    if "ITS" in roles:
-        await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem]["ITS"]))
-        print(f"Added role '{sem+1}. Sem - ITS' to {member.name}")
-        remove_double_sem_roles(member, old_roles)
-    if "TI" in roles:
-        await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem]["TI"]))
-        print(f"Added role '{sem+1}. Sem - TI' to {member.name}")
-        remove_double_sem_roles(member, old_roles)
-    if "WIN" in roles:
-        await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem]["WIN"]))
-        print(f"Added role '{sem+1}. Sem - WIN' to {member.name}")
-        remove_double_sem_roles(member, old_roles)
+    for sem_num,sem in enumerate(role_numbers):
+        if "ITS" in roles:
+            await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem]["ITS"]))
+            print(f"Added role '{sem+1}. Sem - ITS' to {member.name}")
+            await remove_double_sem_roles(member, old_roles)
+        if "TI" in roles:
+            await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem]["TI"]))
+            print(f"Added role '{sem+1}. Sem - TI' to {member.name}")
+            await remove_double_sem_roles(member, old_roles)
+        if "WIN" in roles:
+            await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem]["WIN"]))
+            print(f"Added role '{sem+1}. Sem - WIN' to {member.name}")
+            await remove_double_sem_roles(member, old_roles)
 
     return
 
 async def remove_double_sem_roles(member: discord.Member, old_roles: list) -> None:
-    new_roles = [role.name for role in member.roles]
-    new_roles = [role for role in new_roles if role not in old_roles] # nur noch die neue Rolle bleiben übrig
+
+    new_roles = [role.name for role in member.roles if role.name not in old_roles] # nur noch die neue Rolle bleiben übrig
+
     if len(new_roles) == 0:
         print(f"Member {member.name} has no new roles.")
         return
-    old_roles_numbers = [int(role[:1]) for role in old_roles if role[:1].isdigit()]
-    if len(old_roles_numbers) > 1:
+    
+    if len(role_numbers) > 1:   # Wenn mehr als eine Semesterrolle vorhanden ist soll nichts gelöscht werden
         print(f"Member {member.name} has more than one semester role.")
         return
+    
     # Else nur eine Rolle also muss die andere geändert werden!
     sem = new_roles[0][:1] # Semester aus der Rolle extrahieren
-    anti_sem = [sem_number for sem_number in old_roles_numbers if sem_number[:1] != sem][0] # alle alten
+    anti_sem = [sem_number for sem_number in role_numbers if sem_number[:1] != sem][0] # die eine alte Semester Rollennummer extrahieren
     for num in anti_sem:
         sem_roles = [role for role in old_roles if f"{num}. Semester - " in role.name]
         for role in sem_roles:
