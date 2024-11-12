@@ -11,6 +11,7 @@ from roles import add_sem_roles
 # Load Toaken from Safe File
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+print(TOKEN)
 
 # Intents Setup
 intents = discord.Intents.all()
@@ -33,7 +34,7 @@ async def send_message(message: discord.message, user_message: str) -> None:
         if not response: # If response is empty
             return
         await message.author.send(response) if is_private else await message.channel.send(response)  # If private -> Author, else -> Channel
-    except errors.HTTPException as e:   # for HTTP Errors wie Bad Requests
+    except discord.errors.HTTPException as e:   # for HTTP Errors wie Bad Requests
         print(e)
     except Exception as e:
         print(e, type(e))
@@ -71,7 +72,12 @@ async def on_message(message: discord.message) -> None:
 @tree.command(name="assign_roles", description="Assign roles based on existing roles", guild=GUILD_ID)
 @app_commands.checks.has_permissions(administrator=True)
 async def assign_roles(interaction: discord.Interaction):
+    if not interaction.guild.me.guild_permissions.manage_roles:
+        await interaction.response.send_message("I do not have permission to manage roles.", ephemeral=True)
+        return
     for member in interaction.guild.members:
+        if member == client.user:
+            continue
         await add_sem_roles(member)
     await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
 
