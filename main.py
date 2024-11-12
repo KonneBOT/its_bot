@@ -35,8 +35,10 @@ async def send_message(message: discord.message, user_message: str) -> None:
         if not response: # If response is empty
             return
         await message.author.send(response) if is_private else await message.channel.send(response)  # If private -> Author, else -> Channel
+
     except discord.errors.HTTPException as e:   # for HTTP Errors wie Bad Requests
         print(e)
+
     except Exception as e:
         print(e, type(e))
 
@@ -45,7 +47,7 @@ async def send_message(message: discord.message, user_message: str) -> None:
 async def on_ready() -> None:
     print(f'{client.user} has connected to Discord!')
     try:        
-        await tree.sync(guild=GUILD_ID) # Sync the Commands
+        await tree.sync() # Sync the Commands
         print("Synced")
     except Exception as e:
         print(e)
@@ -71,16 +73,19 @@ async def on_message(message: discord.message) -> None:
     await send_message(message, user_message) # send the message to the send_message function / to Console
 
 # Slash Command to Assign Roles
-@tree.command(name="assign_roles", description="Assign roles based on existing roles", guild=GUILD_ID)
+@tree.command(name="assign_roles", description="Assign roles based on existing roles")
 @app_commands.checks.has_permissions(administrator=True)
 async def assign_roles(interaction: discord.Interaction):
     if not interaction.guild.me.guild_permissions.manage_roles:
         await interaction.response.send_message("I do not have permission to manage roles.", ephemeral=True)
         return
+    
     for member in interaction.guild.members:
         if member == client.user:
             continue
+
         await add_sem_roles(member)
+
     await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
 
 # Check for member_updates to assign semester rules
@@ -88,22 +93,27 @@ async def assign_roles(interaction: discord.Interaction):
 async def on_member_update(before: discord.Member, after: discord.Member) -> None:
     if len(before.roles) == len(after.roles):
         pass                   # Falls man hier iwann mal stolpert: in roles.py eine if Abfrage schreiben für len(rmvd_roles) = 0
+
     elif len(before.roles) > len(after.roles):
         await remove_sem_roles(after, before.roles)
+
     else:
         await add_sem_roles(after)
+
     print("--------------------")
     return
 
 
-@tree.command(name="assign_role_channel", description="Assign to Channels to limit access of other roles ", guild=GUILD_ID)
+@tree.command(name="assign_role_channel", description="Assign to Channels to limit access of other roles ")
 @app_commands.checks.has_permissions(administrator=True)
 async def assign_roles_channel(interaction: discord.Interaction, role: discord.Role):
     try:
         await edit_per_channel(interaction.channel, role)
         await interaction.response.send_message("Channel has been updated", ephemeral=True)
+    
     except Exception as e:
         await interaction.response.send_message(e, ephemeral=True)
+
 # Run the Bot
 def main() -> None:
     client.run(TOKEN)
