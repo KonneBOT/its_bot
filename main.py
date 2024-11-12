@@ -50,3 +50,6 @@ async def on_message(message: Message) -> None:
 # Run the Bot
 def main() -> None:
     client.run(TOKEN)
+
+if __name__ == '__main__':
+    main()
