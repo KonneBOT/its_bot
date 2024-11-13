@@ -9,16 +9,26 @@ from responses import get_response
 from roles import add_sem_roles, remove_sem_roles
 from channels import  edit_per_channel
 
+import asyncio
+import yt_dlp as youtube_dl
+
 # Load Toaken from Safe File
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-print(TOKEN)
 
 # Intents Setup
 intents = discord.Intents.all()
 client = discord.Client(intents=intents, command_prefix="uwu")
 tree = app_commands.CommandTree(client)
 GUILD_ID = discord.Object(id="1305824039557791834")
+
+# Music Setup
+voice_clients = {}
+
+yt_dl_opts = {'format': 'bestaudio/best'}
+ytdl = youtube_dl.YoutubeDL(yt_dl_opts)
+
+ffmpeg_opts = {'options': '-vn'}    # no video
 
 # Message Functionality
 async def send_message(message: discord.message, user_message: str) -> None:
@@ -72,22 +82,6 @@ async def on_message(message: discord.message) -> None:
 
     await send_message(message, user_message) # send the message to the send_message function / to Console
 
-# Slash Command to Assign Roles
-@tree.command(name="assign_roles", description="Assign roles based on existing roles")
-@app_commands.checks.has_permissions(administrator=True)
-async def assign_roles(interaction: discord.Interaction):
-    if not interaction.guild.me.guild_permissions.manage_roles:
-        await interaction.response.send_message("I do not have permission to manage roles.", ephemeral=True)
-        return
-    
-    for member in interaction.guild.members:
-        if member == client.user:
-            continue
-
-        await add_sem_roles(member)
-
-    await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
-
 # Check for member_updates to assign semester rules
 @client.event
 async def on_member_update(before: discord.Member, after: discord.Member) -> None:
@@ -104,6 +98,24 @@ async def on_member_update(before: discord.Member, after: discord.Member) -> Non
     return
 
 
+# Slash Command to Assign Roles
+@tree.command(name="assign_roles", description="Assign roles based on existing roles")
+@app_commands.checks.has_permissions(administrator=True)
+async def assign_roles(interaction: discord.Interaction):
+    if not interaction.guild.me.guild_permissions.manage_roles:
+        await interaction.response.send_message("I do not have permission to manage roles.", ephemeral=True)
+        return
+    
+    for member in interaction.guild.members:
+        if member == client.user:
+            continue
+
+        await add_sem_roles(member)
+
+    await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
+
+
+# Slash Command Assign Role to certain Channel
 @tree.command(name="assign_role_channel", description="Assign to Channels to limit access of other roles ")
 @app_commands.checks.has_permissions(administrator=True)
 async def assign_roles_channel(interaction: discord.Interaction, role: discord.Role):
@@ -111,6 +123,43 @@ async def assign_roles_channel(interaction: discord.Interaction, role: discord.R
         await edit_per_channel(interaction.channel, role)
         await interaction.response.send_message("Channel has been updated", ephemeral=True)
     
+    except Exception as e:
+        await interaction.response.send_message(e, ephemeral=True)
+
+
+# Slash Commmand for basic Music Functionality
+@tree.command(name="play", description="Play a song")
+#@app_commands.checks.has_permissions(administrator=True)
+async def play(interaction: discord.Interaction, url: str):
+    if not interaction.guild.me.guild_permissions.connect:
+        await interaction.response.send_message("I do not have permission to connect to a voice channel.", ephemeral=True)
+        return
+
+    if not interaction.guild.me.guild_permissions.speak:
+        await interaction.response.send_message("I do not have permission to speak in a voice channel.", ephemeral=True)
+        return
+
+    if not interaction.user.voice:
+        await interaction.response.send_message("You are not connected to a voice channel.", ephemeral=True)
+        return
+
+    try:
+        voice_channel = interaction.user.voice.channel
+        if  voice_channel.guild.id not in voice_clients:
+            voice_client = await voice_channel.connect()
+            voice_clients[interaction.guild.id] = voice_client
+        else:
+            await interaction.response.send_message("I am already connected to a voice channel.", ephemeral=True)
+
+        loop = asyncio.get_event_loop()     # get the event loop -> läuft im Hintergrund
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=False))
+        
+        song = data['url']
+
+        voice_client.play(discord.FFmpegPCMAudio(song, **ffmpeg_opts))
+
+        await interaction.response.send_message("Playing song", ephemeral=True)
+
     except Exception as e:
         await interaction.response.send_message(e, ephemeral=True)
 
