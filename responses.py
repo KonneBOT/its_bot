@@ -9,6 +9,8 @@ def get_response(user_input: str) -> str:
         choice(['I do not understand.', 'I am not sure what you mean.', 'Could you rephrase that?'])
     elif 'hello' in lowered:
         return "Hello there!"
+    elif 'hello there' in lowered:
+        return "General Kenobi!"
     elif 'bye' in lowered:
         return "Goodbye!"
     elif 'hower' in lowered:
