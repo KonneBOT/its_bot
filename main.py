@@ -97,6 +97,18 @@ async def on_member_update(before: discord.Member, after: discord.Member) -> Non
     print("--------------------")
     return
 
+# Event to check if the bot is alone in a voice channel and disconnect
+@client.event
+async def on_voice_state_update(member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+    if member == client.user:
+        return
+
+    voice_client = voice_clients.get(member.guild.id)
+    if voice_client and len(voice_client.channel.members) == 1:
+        await voice_client.disconnect()
+        print("Disconnected as I am alone in the voice channel.")
+        del voice_clients[member.guild.id]
+
 
 # Slash Command to Assign Roles
 @tree.command(name="assign_roles", description="Assign roles based on existing roles")
