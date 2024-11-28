@@ -21,10 +21,15 @@ async def add_sem_roles(member: discord.Member) -> None:
         "TI": "4. Sem - TI",
         "WIN": "4. Sem - WIN"
     }
+    role_map_sem5 = {
+        "ITS": "5. Sem - ITS",
+        "TI": "5. Sem - TI",
+        "WIN": "5. Sem - WIN"
+    }
 
     #TODO: Alle Erweitern auf DCT und WIW
 
-    role_maps = [role_map_sem1, role_map_sem2, role_map_sem3, role_map_sem4]
+    role_maps = [role_map_sem1, role_map_sem2, role_map_sem3, role_map_sem4, role_map_sem5]
 
     roles = [role.name for role in member.roles]
 
