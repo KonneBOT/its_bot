@@ -57,6 +57,8 @@ async def add_sem_roles(member: discord.Member) -> None:
                 print(f"Added role '{sem}. Sem - WIN' to {member.name}")
     return
 
+
+#TODO: Es fehlt noch die Überprüfung wenn der Bot länger nicht auf dem Server war, das Semesterrollen wieder entfernt werden
 async def remove_sem_roles(member: discord.Member, old_roles: list) -> None:
 
     if len(old_roles) == len(member.roles) or len(old_roles) < len(member.roles):
