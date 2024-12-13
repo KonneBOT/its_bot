@@ -16,6 +16,7 @@ def get_response(user_input: str) -> str:
     elif ' hower' in lowered:
         return choice(['Der VDI wird Sie nicht retten!', 'Ja ne, das ist falsch', 'Denkste das ist richtig?', 
                        "Sehen und Hören Sie mich?", "Was meinen Sie dahinten im Lovechair?", "Grüße an das Reha Zentrum!",
-                       "Sie kommen nie in den 05er!", "Dreimal durch die Brust geschossen!"])
+                       "Sie kommen nie in den 05er!", "Dreimal durch die Brust geschossen!", "Das ist der gängige Fehler!",
+                        "Das brauchen Sie sich nicht auf die Sprudelflasche schreiben!"])
     elif 'roll' in lowered and not "rollen" in lowered:
         return f"You rolled a {randint(1, 6)}."
