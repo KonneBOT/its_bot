@@ -1,30 +1,15 @@
 import discord
-
 async def add_sem_roles(member: discord.Member) -> None:
-    role_map_sem1 = {
-        "ITS": "1. Sem - ITS",
-        "TI": "1. Sem - TI",
-        "WIN": "1. Sem - WIN"
-    }
-    role_map_sem2 = {
-        "ITS": "2. Sem - ITS",
-        "TI": "2. Sem - TI",
-        "WIN": "2. Sem - WIN"
-    }
-    role_map_sem3 = {
-        "ITS": "3. Sem - ITS",
-        "TI": "3. Sem - TI",
-        "WIN": "3. Sem - WIN"
-    }
-    role_map_sem4 = {
-        "ITS": "4. Sem - ITS",
-        "TI": "4. Sem - TI",
-        "WIN": "4. Sem - WIN"
-    }
-
-    #TODO: Alle Erweitern auf DCT und WIW
-
-    role_maps = [role_map_sem1, role_map_sem2, role_map_sem3, role_map_sem4]
+    role_maps = []
+    for i in range(1, 8):
+        role_map = {
+            "ITS": f'{i}. Sem - ITS',
+            "TI": f'{i}. Sem - TI',
+            "WIN": f'{i}. Sem - WIN',
+            "DCT": f'{i}. Sem - DCT',
+            "WIW": f'{i}. Sem - WIW',
+        }
+        role_maps.append(role_map)
 
     roles = [role.name for role in member.roles]
 
@@ -75,5 +60,6 @@ async def remove_sem_roles(member: discord.Member, old_roles: list) -> None:
             print(f"Removed role '{sem}. Sem - {rmvd_role}' from {member.name}")
     return 
 
-
-    
+#TODO Erstelle alle notwendigen Rollen falls nicht vorhanden
+async def create_roles():
+    return
