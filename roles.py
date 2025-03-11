@@ -1,5 +1,5 @@
 import discord
-async def add_sem_roles(member: discord.Member) -> None:
+async def update_sem_roles(member: discord.Member) -> None:
     role_maps = []
     for i in range(1, 8):
         role_map = {
@@ -13,6 +13,15 @@ async def add_sem_roles(member: discord.Member) -> None:
 
     roles = [role.name for role in member.roles]
 
+    # Check for orphaned "i. Sem - XXX" Roles (ohne "Semester i")
+    roles_sem = [role for role in roles if role[0].isdigit()] # Wenn erste Stelle eine Zahl ist erfüllt schon Schema "i. Sem - XXX"
+    for role in roles_sem:
+        sem = role[0]
+        if not f"Semester {sem}" in roles:
+            await member.remove_roles(discord.utils.get(member.guild.roles, name=role))
+            print(f"Removed orphaned role '{role}' from {member.name}")
+
+    # Add the new "i. Sem - XXX" Roles to the member
     role_numbers = [int(role[-1]) for role in roles if role[-1].isdigit()] 
     
     if role_numbers == []:  # Wenn keine Semesterrolle vorhanden ist
@@ -37,7 +46,7 @@ async def add_sem_roles(member: discord.Member) -> None:
                 print(f"Added role '{sem}. Sem - WIN' to {member.name}")
     return
 
-async def remove_sem_roles(member: discord.Member, old_roles: list) -> None:
+async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
 
     if len(old_roles) == len(member.roles) or len(old_roles) < len(member.roles):
         return
