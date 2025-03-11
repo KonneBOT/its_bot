@@ -139,7 +139,7 @@ async def create_roles(interaction: discord.Interaction):
 @app_commands.checks.has_permissions(administrator=True)
 async def create_roles(interaction: discord.Interaction):
     try:
-        await remove_roles(interaction.guild)
+        await sort_roles(interaction.guild)
         await interaction.response.send_message("Roles have been sorted", ephemeral=True)
 
     except Exception as e:
