@@ -27,24 +27,16 @@ async def update_sem_roles(member: discord.Member) -> None:
     if role_numbers == []:  # Wenn keine Semesterrolle vorhanden ist
         print(f"Member {member.name} has no semester role.")
         return
-    elif "ITS" not in roles and "TI" not in roles and "WIN" not in roles:
+    elif not any(x in roles for x in courses): #Wenn keine Cours rolle hat
         print(f"Member {member.name} has no course role.")
         return
 
-    #TODO make it depend on "courses"
     for sem in role_numbers:
-        if "ITS" in roles:
-            if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["ITS"]) in member.roles:
-                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["ITS"]))
-                print(f"Added role '{sem}. Sem - ITS' to {member.name}")
-        if "TI" in roles:
-            if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["TI"]) in member.roles:
-                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["TI"]))
-                print(f"Added role '{sem}. Sem - TI' to {member.name}")
-        if "WIN" in roles:
-            if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["WIN"]) in member.roles:
-                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["WIN"]))
-                print(f"Added role '{sem}. Sem - WIN' to {member.name}")
+        for course in courses:
+            if course in roles:
+                if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1][course]) in member.roles:
+                    await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem - 1][course]))
+                    print(f"Added role '{sem}. Sem - {course}' to {member.name}")
     return
 
 
@@ -52,8 +44,7 @@ async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
     if len(old_roles) == len(member.roles) or len(old_roles) < len(member.roles):
         return
 
-    rmvd_role = [role.name for role in old_roles if role not in member.roles][
-        0]  # nur noch die gelöschte Rolle bleibt übrig
+    rmvd_role = [role.name for role in old_roles if role not in member.roles][0]  # nur noch die gelöschte Rolle bleibt übrig
     sem_numbers = [int(role.name[-1]) for role in member.roles if role.name[-1].isdigit()]  # Semesterzahlen extrahieren
     studiengaenge = [role.name for role in member.roles if role.name in courses]  # Studiengänge extrahieren
 
@@ -92,9 +83,9 @@ async def create_roles(guild: discord.Guild) -> None:
 
 async def delete_roles(guild: discord.Guild) -> None:
     roles = await guild.fetch_roles()
-    expectedRoles = create_expected_roles()
+    expectedroles = create_expected_roles()
     for role in roles:
-        if role.name in expectedRoles:
+        if role.name in expectedroles:
             await role.delete()
     return
 
