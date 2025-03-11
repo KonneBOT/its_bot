@@ -2,6 +2,7 @@ import discord
 
 courses = ["ITS", "TI", "WIN", "DCT", "WIW"]
 
+
 async def update_sem_roles(member: discord.Member) -> None:
     role_maps = []
     for i in range(1, 8):
@@ -21,8 +22,8 @@ async def update_sem_roles(member: discord.Member) -> None:
             print(f"Removed orphaned role '{role}' from {member.name}")
 
     # Add the new "i. Sem - XXX" Roles to the member
-    role_numbers = [int(role[-1]) for role in roles if role[-1].isdigit()] 
-    
+    role_numbers = [int(role[-1]) for role in roles if role[-1].isdigit()]
+
     if role_numbers == []:  # Wenn keine Semesterrolle vorhanden ist
         print(f"Member {member.name} has no semester role.")
         return
@@ -30,6 +31,7 @@ async def update_sem_roles(member: discord.Member) -> None:
         print(f"Member {member.name} has no course role.")
         return
 
+    #TODO make it depend on "courses"
     for sem in role_numbers:
         if "ITS" in roles:
             if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["ITS"]) in member.roles:
@@ -49,10 +51,11 @@ async def update_sem_roles(member: discord.Member) -> None:
 async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
     if len(old_roles) == len(member.roles) or len(old_roles) < len(member.roles):
         return
-    
-    rmvd_role = [role.name for role in old_roles if role not in member.roles][0]           # nur noch die gelöschte Rolle bleibt übrig
-    sem_numbers = [int(role.name[-1]) for role in member.roles if role.name[-1].isdigit()]       # Semesterzahlen extrahieren
-    studiengaenge = [role.name for role in member.roles if role.name in courses]   # Studiengänge extrahieren
+
+    rmvd_role = [role.name for role in old_roles if role not in member.roles][
+        0]  # nur noch die gelöschte Rolle bleibt übrig
+    sem_numbers = [int(role.name[-1]) for role in member.roles if role.name[-1].isdigit()]  # Semesterzahlen extrahieren
+    studiengaenge = [role.name for role in member.roles if role.name in courses]  # Studiengänge extrahieren
 
     print(f"Removed role: {rmvd_role}")
 
@@ -62,7 +65,7 @@ async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
             await member.remove_roles(discord.utils.get(member.guild.roles, name=f"{sem}. Sem - {studiengang}"))
             print(f"Removed role '{sem}. Sem - {studiengang}' from {member.name}")
 
-    elif rmvd_role in courses: # Wenn die gelöschte Rolle ein Studiengang war
+    elif rmvd_role in courses:  # Wenn die gelöschte Rolle ein Studiengang war
         for sem in sem_numbers:
             await member.remove_roles(discord.utils.get(member.guild.roles, name=f"{sem}. Sem - {rmvd_role}"))
             print(f"Removed role '{sem}. Sem - {rmvd_role}' from {member.name}")
@@ -75,6 +78,7 @@ def create_expected_roles() -> list:
         for course in courses:
             expextedroles.append(f'{i}. Sem - {course}')
     return expextedroles
+
 
 async def create_roles(guild: discord.Guild) -> None:
     roles = await guild.fetch_roles()
