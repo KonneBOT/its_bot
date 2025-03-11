@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from responses import get_response
-from roles import add_sem_roles, remove_sem_roles
+from roles import update_sem_roles, remove_old_sem_roles
 from channels import  edit_per_channel
 
 # Load Toaken from Safe File
@@ -84,7 +84,7 @@ async def assign_roles(interaction: discord.Interaction):
         if member == client.user:
             continue
 
-        await add_sem_roles(member)
+        await update_sem_roles(member)
 
     await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
 
@@ -95,10 +95,10 @@ async def on_member_update(before: discord.Member, after: discord.Member) -> Non
         pass                   # Falls man hier iwann mal stolpert: in roles.py eine if Abfrage schreiben für len(rmvd_roles) = 0
 
     elif len(before.roles) > len(after.roles):
-        await remove_sem_roles(after, before.roles)
+        await remove_old_sem_roles(after, before.roles)
 
     else:
-        await add_sem_roles(after)
+        await update_sem_roles(after)
 
     print("--------------------")
     return
