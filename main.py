@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from responses import get_response
-from roles import update_sem_roles, remove_old_sem_roles
+from roles import update_sem_roles, remove_old_sem_roles, sort_roles, create_roles, remove_roles
 from channels import  edit_per_channel
 
 # Load Toaken from Safe File
@@ -114,6 +114,36 @@ async def assign_roles_channel(interaction: discord.Interaction, role: discord.R
     except Exception as e:
         await interaction.response.send_message(e, ephemeral=True)
 
+
+@tree.command(name="create_roles", description="Create all missing Roles")
+@app_commands.checks.has_permissions(administrator=True)
+async def create_roles(interaction: discord.Interaction):
+    try:
+        await create_roles(interaction.guild)
+        await interaction.response.send_message("Roles have been created", ephemeral=True)
+
+    except Exception as e:
+        await interaction.response.send_message(e, ephemeral=True)
+
+@tree.command(name="remove_roles", description="remove all Roles")
+@app_commands.checks.has_permissions(administrator=True)
+async def create_roles(interaction: discord.Interaction):
+    try:
+        await remove_roles(interaction.guild)
+        await interaction.response.send_message("Roles have been removed", ephemeral=True)
+
+    except Exception as e:
+        await interaction.response.send_message(e, ephemeral=True)
+
+@tree.command(name="sort_roles", description="sort roles in discord role overview")
+@app_commands.checks.has_permissions(administrator=True)
+async def create_roles(interaction: discord.Interaction):
+    try:
+        await remove_roles(interaction.guild)
+        await interaction.response.send_message("Roles have been sorted", ephemeral=True)
+
+    except Exception as e:
+        await interaction.response.send_message(e, ephemeral=True)
 # Run the Bot
 def main() -> None:
     client.run(TOKEN)

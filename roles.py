@@ -1,4 +1,7 @@
 import discord
+
+courses = ["ITS", "TI", "WIN", "DCT", "WIW"]
+
 async def update_sem_roles(member: discord.Member) -> None:
     role_maps = []
     for i in range(1, 8):
@@ -33,21 +36,21 @@ async def update_sem_roles(member: discord.Member) -> None:
 
     for sem in role_numbers:
         if "ITS" in roles:
-            if not discord.utils.get(member.guild.roles, name=role_maps[sem-1]["ITS"]) in member.roles:
-                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem-1]["ITS"]))
+            if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["ITS"]) in member.roles:
+                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["ITS"]))
                 print(f"Added role '{sem}. Sem - ITS' to {member.name}")
         if "TI" in roles:
-            if not discord.utils.get(member.guild.roles, name=role_maps[sem-1]["TI"]) in member.roles:
-                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem-1]["TI"]))
+            if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["TI"]) in member.roles:
+                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["TI"]))
                 print(f"Added role '{sem}. Sem - TI' to {member.name}")
         if "WIN" in roles:
-            if not discord.utils.get(member.guild.roles, name=role_maps[sem-1]["WIN"]) in member.roles:
-                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem-1]["WIN"]))
+            if not discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["WIN"]) in member.roles:
+                await member.add_roles(discord.utils.get(member.guild.roles, name=role_maps[sem - 1]["WIN"]))
                 print(f"Added role '{sem}. Sem - WIN' to {member.name}")
     return
 
-async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
 
+async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
     if len(old_roles) == len(member.roles) or len(old_roles) < len(member.roles):
         return
     
@@ -57,7 +60,7 @@ async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
 
     print(f"Removed role: {rmvd_role}")
 
-    if rmvd_role[-1].isdigit(): # Wenn die gelöschte Rolle eine Semesterrolle war
+    if rmvd_role[-1].isdigit():  # Wenn die gelöschte Rolle eine Semesterrolle war
         sem = rmvd_role[-1]
         for studiengang in studiengaenge:
             await member.remove_roles(discord.utils.get(member.guild.roles, name=f"{sem}. Sem - {studiengang}"))
@@ -67,8 +70,40 @@ async def remove_old_sem_roles(member: discord.Member, old_roles: list) -> None:
         for sem in sem_numbers:
             await member.remove_roles(discord.utils.get(member.guild.roles, name=f"{sem}. Sem - {rmvd_role}"))
             print(f"Removed role '{sem}. Sem - {rmvd_role}' from {member.name}")
-    return 
+    return
 
-#TODO Erstelle alle notwendigen Rollen falls nicht vorhanden
-async def create_roles():
+
+def create_expected_roles() -> list:
+    expextedroles = []
+    for i in range(1, 8):
+        for course in courses:
+            expextedroles.append(f'{i}. Sem - {course}')
+    return expextedroles
+
+async def create_roles(guild: discord.Guild) -> None:
+    roles = await guild.fetch_roles()
+    rolenames = [role.name for role in roles]
+    expectedroles = create_expected_roles()
+    for i, role in enumerate(expectedroles):
+        if role not in rolenames:
+            await guild.create_role(name=role)
+    return
+
+
+async def remove_roles(guild: discord.Guild) -> None:
+    roles = await guild.fetch_roles()
+    expectedRoles = create_expected_roles()
+    for role in roles:
+        if role.name in expectedRoles:
+            await role.delete()
+    return
+
+
+async def sort_roles(guild: discord.Guild) -> None:
+    expectedroles = create_expected_roles()
+    start = discord.utils.get(guild.roles, name=expectedroles[0]).position
+    for name in expectedroles:
+        role = discord.utils.get(guild.roles, name=name)
+        await role.edit(position=start, reason='sort')
+        start = start - 1
     return
