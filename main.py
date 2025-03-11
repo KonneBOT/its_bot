@@ -130,7 +130,7 @@ async def create_roles(interaction: discord.Interaction):
 async def create_roles(interaction: discord.Interaction):
     try:
         await delete_roles(interaction.guild)
-        await interaction.response.send_message("Roles have been removed", ephemeral=True)
+        await interaction.response.send_message("Roles have been deleted", ephemeral=True)
 
     except Exception as e:
         await interaction.response.send_message(e, ephemeral=True)
