@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from responses import get_response
-from roles import update_sem_roles, remove_old_sem_roles, sort_roles, create_roles, remove_roles
+from roles import update_sem_roles, remove_old_sem_roles, sort_roles, create_roles, delete_roles
 from channels import  edit_per_channel
 
 # Load Toaken from Safe File
@@ -125,17 +125,17 @@ async def create_roles(interaction: discord.Interaction):
     except Exception as e:
         await interaction.response.send_message(e, ephemeral=True)
 
-@tree.command(name="remove_roles", description="remove all Roles")
+@tree.command(name="delete_roles", description="Delete all sem roles")
 @app_commands.checks.has_permissions(administrator=True)
 async def create_roles(interaction: discord.Interaction):
     try:
-        await remove_roles(interaction.guild)
+        await delete_roles(interaction.guild)
         await interaction.response.send_message("Roles have been removed", ephemeral=True)
 
     except Exception as e:
         await interaction.response.send_message(e, ephemeral=True)
 
-@tree.command(name="sort_roles", description="sort roles in discord role overview")
+@tree.command(name="sort_roles", description="Sort roles in discord role overview")
 @app_commands.checks.has_permissions(administrator=True)
 async def create_roles(interaction: discord.Interaction):
     try:

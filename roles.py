@@ -90,7 +90,7 @@ async def create_roles(guild: discord.Guild) -> None:
     return
 
 
-async def remove_roles(guild: discord.Guild) -> None:
+async def delete_roles(guild: discord.Guild) -> None:
     roles = await guild.fetch_roles()
     expectedRoles = create_expected_roles()
     for role in roles:
