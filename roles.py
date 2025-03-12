@@ -1,6 +1,6 @@
 import discord
 
-courses = ["ITS", "TI", "WIN", "DCT", "WIW"]
+courses = ["ITS", "TI", "WIN", "DTC", "WIW"]
 
 
 async def update_sem_roles(member: discord.Member) -> None:
