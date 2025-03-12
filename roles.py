@@ -81,7 +81,7 @@ async def create_roles(guild: discord.Guild) -> None:
     return
 
 
-async def delete_roles(guild: discord.Guild) -> None:
+async def delete_sem_roles(guild: discord.Guild) -> None:
     roles = await guild.fetch_roles()
     expectedroles = create_expected_roles()
     for role in roles:
@@ -90,7 +90,7 @@ async def delete_roles(guild: discord.Guild) -> None:
     return
 
 
-async def sort_roles(guild: discord.Guild) -> None:
+async def sort_sem_roles(guild: discord.Guild) -> None:
     expectedroles = create_expected_roles()
     start = discord.utils.get(guild.roles, name=expectedroles[0]).position
     for name in expectedroles:

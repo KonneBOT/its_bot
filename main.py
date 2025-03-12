@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from responses import get_response
-from roles import update_sem_roles, remove_old_sem_roles, sort_roles, create_roles, delete_roles
+from roles import update_sem_roles, remove_old_sem_roles, sort_sem_roles, create_roles, delete_sem_roles
 from channels import  edit_per_channel
 
 # Load Toaken from Safe File
@@ -119,7 +119,7 @@ async def assign_roles_channel(interaction: discord.Interaction, role: discord.R
 @app_commands.checks.has_permissions(administrator=True)
 async def create_roles(interaction: discord.Interaction):
     try:
-        await create_roles(interaction.guild)
+        await create_sem_roles(interaction.guild)
         await interaction.response.send_message("Roles have been created", ephemeral=True)
 
     except Exception as e:
@@ -127,9 +127,9 @@ async def create_roles(interaction: discord.Interaction):
 
 @tree.command(name="delete_roles", description="Delete all sem roles")
 @app_commands.checks.has_permissions(administrator=True)
-async def create_roles(interaction: discord.Interaction):
+async def delete_roles(interaction: discord.Interaction):
     try:
-        await delete_roles(interaction.guild)
+        await delete_sem_roles(interaction.guild)
         await interaction.response.send_message("Roles have been deleted", ephemeral=True)
 
     except Exception as e:
@@ -137,9 +137,9 @@ async def create_roles(interaction: discord.Interaction):
 
 @tree.command(name="sort_roles", description="Sort roles in discord role overview")
 @app_commands.checks.has_permissions(administrator=True)
-async def create_roles(interaction: discord.Interaction):
+async def sort_roles(interaction: discord.Interaction):
     try:
-        await sort_roles(interaction.guild)
+        await sort_sem_roles(interaction.guild)
         await interaction.response.send_message("Roles have been sorted", ephemeral=True)
 
     except Exception as e:
