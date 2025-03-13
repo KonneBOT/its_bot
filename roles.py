@@ -71,7 +71,7 @@ def create_expected_roles() -> list:
     return expextedroles
 
 
-async def create_roles(guild: discord.Guild) -> None:
+async def create_sem_roles(guild: discord.Guild) -> None:
     roles = await guild.fetch_roles()
     rolenames = [role.name for role in roles]
     expectedroles = create_expected_roles()

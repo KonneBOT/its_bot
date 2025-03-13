@@ -6,13 +6,8 @@ from discord.ext import commands
 from discord import app_commands
 
 from responses import get_response
-from roles import update_sem_roles, remove_old_sem_roles, sort_sem_roles, create_roles, delete_sem_roles
-from channels import  edit_per_channel
-
-# Load Toaken from Safe File
-load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
-print(TOKEN)
+from roles import update_sem_roles, remove_old_sem_roles, sort_sem_roles, create_sem_roles, delete_sem_roles
+from channels import  edit_per_channel, update_modul_channels
 
 # Intents Setup
 intents = discord.Intents.all()
@@ -119,31 +114,45 @@ async def assign_roles_channel(interaction: discord.Interaction, role: discord.R
 @app_commands.checks.has_permissions(administrator=True)
 async def create_roles(interaction: discord.Interaction):
     try:
+        await interaction.response("Roles are being created", ephemeral=True)
         await create_sem_roles(interaction.guild)
-        await interaction.response.send_message("Roles have been created", ephemeral=True)
+        await interaction.edit_original_response("Roles have been created", ephemeral=True)
 
     except Exception as e:
-        await interaction.response.send_message(e, ephemeral=True)
+        await interaction.edit_original_response(e, ephemeral=True)
 
 @tree.command(name="delete_roles", description="Delete all sem roles")
 @app_commands.checks.has_permissions(administrator=True)
 async def delete_roles(interaction: discord.Interaction):
     try:
+        await interaction.response("Roles are being deleted", ephemeral=True)
         await delete_sem_roles(interaction.guild)
-        await interaction.response.send_message("Roles have been deleted", ephemeral=True)
+        await interaction.edit_original_response("Roles have been deleted", ephemeral=True)
 
     except Exception as e:
-        await interaction.response.send_message(e, ephemeral=True)
+        await interaction.edit_original_response(e, ephemeral=True)
 
 @tree.command(name="sort_roles", description="Sort roles in discord role overview")
 @app_commands.checks.has_permissions(administrator=True)
 async def sort_roles(interaction: discord.Interaction):
     try:
+        await interaction.response("Roles are being sorted", ephemeral=True)
         await sort_sem_roles(interaction.guild)
-        await interaction.response.send_message("Roles have been sorted", ephemeral=True)
+        await interaction.edit_original_response("Roles have been sorted", ephemeral=True)
 
     except Exception as e:
-        await interaction.response.send_message(e, ephemeral=True)
+        await interaction.edit_original_response(e, ephemeral=True)
+
+@tree.command(name="update_channels", description="create or update channels, given from a course catalogue pdf")
+@app_commands.checks.has_permissions(administrator=True)
+async def update_channels(interaction: discord.Interaction, attachment: discord.Attachment, createnewchannel: bool):
+    try:
+        await interaction.response.send_message("Channel will be updated ...", ephemeral=True)
+        await update_modul_channels(interaction, attachment, createnewchannel)
+        await interaction.edit_original_response(content="Channel have been updated")
+
+    except Exception as e:
+        await interaction.edit_original_response(content=f"{e}")
 # Run the Bot
 def main() -> None:
     client.run(TOKEN)
