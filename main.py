@@ -9,6 +9,11 @@ from responses import get_response
 from roles import update_sem_roles, remove_old_sem_roles, sort_sem_roles, create_sem_roles, delete_sem_roles
 from channels import  edit_per_channel, update_modul_channels
 
+# Load Toaken from Safe File
+load_dotenv()
+TOKEN = os.getenv("DISCORD_TOKEN")
+print(TOKEN)
+
 # Intents Setup
 intents = discord.Intents.all()
 client = discord.Client(intents=intents, command_prefix="uwu")
