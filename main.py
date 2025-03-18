@@ -64,11 +64,11 @@ async def on_message(message: discord.message) -> None:
         else:
             await message.add_reaction('❌')
     
-    username: str = message.author.name # get Username we're talking to
+    #username: str = message.author.name # get Username we're talking to
     user_message: str = message.content # get the message content
-    channel: str = str(message.channel) # get the channel we're talking in
+    #channel: str = str(message.channel) # get the channel we're talking in
 
-    # print(f'[{channel}] {username}: "{user_message}"') # print the message to the console
+    #print(f'[{channel}] {username}: "{user_message}"') # print the message to the console
 
     await send_message(message, user_message) # send the message to the send_message function / to Console
 
@@ -79,14 +79,14 @@ async def assign_roles(interaction: discord.Interaction):
     if not interaction.guild.me.guild_permissions.manage_roles:
         await interaction.response.send_message("I do not have permission to manage roles.", ephemeral=True)
         return
-    
+    await interaction.response.send_message("Roles are being assigned.", ephemeral=True)
     for member in interaction.guild.members:
         if member == client.user:
             continue
 
         await update_sem_roles(member)
 
-    await interaction.response.send_message("Roles have been assigned.", ephemeral=True)
+    await interaction.edit_original_response(content="Roles have been assigned.")
 
 # Check for member_updates to assign semester rules
 @client.event
@@ -119,12 +119,12 @@ async def assign_roles_channel(interaction: discord.Interaction, role: discord.R
 @app_commands.checks.has_permissions(administrator=True)
 async def create_roles(interaction: discord.Interaction):
     try:
-        await interaction.response("Roles are being created", ephemeral=True)
+        await interaction.response.send_message("Roles are being created", ephemeral=True)
         await create_sem_roles(interaction.guild)
-        await interaction.edit_original_response("Roles have been created", ephemeral=True)
+        await interaction.edit_original_response(content="Roles have been created")
 
     except Exception as e:
-        await interaction.edit_original_response(e, ephemeral=True)
+        await interaction.edit_original_response(content=f"{e}")
 
 @tree.command(name="delete_roles", description="Delete all sem roles")
 @app_commands.checks.has_permissions(administrator=True)
@@ -132,10 +132,10 @@ async def delete_roles(interaction: discord.Interaction):
     try:
         await interaction.response("Roles are being deleted", ephemeral=True)
         await delete_sem_roles(interaction.guild)
-        await interaction.edit_original_response("Roles have been deleted", ephemeral=True)
+        await interaction.edit_original_response(content="Roles have been deleted")
 
     except Exception as e:
-        await interaction.edit_original_response(e, ephemeral=True)
+        await interaction.edit_original_response(content=f"{e}")
 
 @tree.command(name="sort_roles", description="Sort roles in discord role overview")
 @app_commands.checks.has_permissions(administrator=True)
@@ -143,10 +143,10 @@ async def sort_roles(interaction: discord.Interaction):
     try:
         await interaction.response("Roles are being sorted", ephemeral=True)
         await sort_sem_roles(interaction.guild)
-        await interaction.edit_original_response("Roles have been sorted", ephemeral=True)
+        await interaction.edit_original_response(content="Roles have been sorted")
 
     except Exception as e:
-        await interaction.edit_original_response(e, ephemeral=True)
+        await interaction.edit_original_response(content=f"{e}")
 
 @tree.command(name="update_channels", description="create or update channels, given from a course catalogue pdf")
 @app_commands.checks.has_permissions(administrator=True)

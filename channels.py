@@ -13,7 +13,7 @@ async def update_modul_channels(interaction: discord.Interaction, attachment: di
         raise Exception(f'Course {course} does not exist, existing courses: {courses}')
     print(course)
     await attachment.save(fp=f"{course}.pdf")
-    moduls = extract_moduls(f"{course}.pdf")
+    moduls = await extract_moduls(f"{course}.pdf")
     channels= [channel for channel in await guild.fetch_channels() if isinstance(channel, discord.TextChannel)]
     roles = await guild.fetch_roles()
     categorys = [channel for channel in await guild.fetch_channels() if isinstance(channel, discord.CategoryChannel)]
