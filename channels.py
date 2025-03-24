@@ -22,7 +22,7 @@ async def update_modul_channels(interaction: discord.Interaction, attachment: di
     for modul in moduls:
         x = False
         for role in roles:
-            if role.name == f"{modul["Studiensemester"]}. Sem - {course}":
+            if role.name == f"{modul['Studiensemester']}. Sem - {course}":
                 r = role
         for channel in textchannels:
             if modul["Modul"] == channel.name:
@@ -35,7 +35,7 @@ async def update_modul_channels(interaction: discord.Interaction, attachment: di
     if createnewchannel:
         for modul in missingmoduls:
             for role in roles:
-                if role.name == f"{modul["Studiensemester"]}. Sem - {course}":
+                if role.name == f"{modul['Studiensemester']}. Sem - {course}":
                     r = role
             category = [category for category in categorychannels if category.name == f"Module Semester {modul["Studiensemester"]}"]
             overwrites = {
