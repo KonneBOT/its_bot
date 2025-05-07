@@ -13,17 +13,18 @@ async def update_modul_channels(interaction: discord.Interaction, attachment: di
         raise Exception(f'Course {course} does not exist, existing courses: {courses}')
     print(course)
     await attachment.save(fp=f"{course}.pdf")
-    moduls = extract_moduls(f"{course}.pdf")
-    channels= [channel for channel in await guild.fetch_channels() if isinstance(channel, discord.TextChannel)]
+    moduls = await extract_moduls(f"{course}.pdf")
+    channels = await guild.fetch_channels()
+    textchannels= [channel for channel in channels if isinstance(channel, discord.TextChannel)]
     roles = await guild.fetch_roles()
-    categorys = [channel for channel in await guild.fetch_channels() if isinstance(channel, discord.CategoryChannel)]
+    categorychannels = [channel for channel in channels if isinstance(channel, discord.CategoryChannel)]
     missingmoduls = []
     for modul in moduls:
         x = False
         for role in roles:
-            if role.name == f"{modul["Studiensemester"]}. Sem - {course}":
+            if role.name == f"{modul['Studiensemester']}. Sem - {course}":
                 r = role
-        for channel in channels:
+        for channel in textchannels:
             if modul["Modul"] == channel.name:
                 x = True
                 await edit_per_channel(channel, r)
@@ -34,9 +35,9 @@ async def update_modul_channels(interaction: discord.Interaction, attachment: di
     if createnewchannel:
         for modul in missingmoduls:
             for role in roles:
-                if role.name == f"{modul["Studiensemester"]}. Sem - {course}":
+                if role.name == f"{modul['Studiensemester']}. Sem - {course}":
                     r = role
-            category = [category for category in categorys if category.name == f"Module Semester {modul["Studiensemester"]}"]
+            category = [category for category in categorychannels if category.name == f"Module Semester {modul['Studiensemester']}"]
             overwrites = {
                 guild.default_role: discord.PermissionOverwrite(view_channel=False),
                 r: discord.PermissionOverwrite(view_channel=True)

@@ -3,7 +3,7 @@ import re
 import numpy as np
 
 # creating a pdf reader object
-def extract_moduls(pdf) -> list:
+async def extract_moduls(pdf) -> list:
     reader = PdfReader(pdf)
     modul = {
         "Studiensemester": None,
