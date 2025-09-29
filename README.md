@@ -38,8 +38,9 @@ Sorts all roles into one block to clean up the role overview
 Takes a *Modulhandbuch* pdf as arg and a *bool* whether or not the bot should create new channels or just eddit the matching existing ones and assign roles to them.
 
 > [!CAUTION]
-> Don't use it without knowing how the PDF should be formatted. That command was specifically designed for the *Modulhandbuch StuPO, 22.2* and **will not work** with others due to formatting changes.</br>
-> It can break and consequences are unknow (edit if someones actually trys it)  
+> Don't use it without knowing how the PDF should be formatted. That command was specifically designed for the *Modulhandbuch StuPO, 22.2* and **will not work** with others due to formatting changes.
+>
+> It can break and consequences are unknown (edit if someones actually trys it)  
 
 ### /update_channels_list 
 
