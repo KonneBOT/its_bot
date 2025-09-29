@@ -61,7 +61,7 @@ Startup Finance
 Sustainable Finance
 Unternehmensplanspiel
 ```
-the run the command ``/update_channels_list`` with the *message.id* of the message.</br>
+then run the command ``/update_channels_list`` with the *message.id* of the message.</br>
 The Bot will now give you the option to select the roles you want to add</br>
 click submit and the bot will add the roles to the allready existing channels and create new channels with the roles for missing ones.
 
