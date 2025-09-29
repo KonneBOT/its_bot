@@ -68,7 +68,7 @@ click submit and the bot will add the roles to the allready existing channels an
 > + you can not remove roles ones they have been stored you can only cancel (yet)
 
 > [!WARNING]
-> The editing of existing channels had not been tested yet 
+> The editing of existing channels has not been tested yet 
 
 ### easter_egg  
 
