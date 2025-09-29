@@ -48,3 +48,23 @@ async def update_modul_channels(interaction: discord.Interaction, attachment: di
             except IndexError:
                 pass
     os.remove(f"{course}.pdf")
+
+async def create_modul_channels_list(interaction: discord.Interaction, category: discord.CategoryChannel, roles, msgid) -> None:
+    guild = interaction.guild
+    channels =  category.text_channels
+    textchannels= [channel.name for channel in channels]
+    message = await interaction.channel.fetch_message(msgid)
+    moduls = message.content.split('\n')
+
+
+    for modul in moduls:
+        if modul not in textchannels:
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(view_channel=False),
+            }
+            for role in roles:
+                overwrites[role] = discord.PermissionOverwrite(view_channel=True)
+
+            await category.create_text_channel(name=modul, overwrites=overwrites)
+            print(f"C {modul}, {[role.name for role in roles]}")
+    return
