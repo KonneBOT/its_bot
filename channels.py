@@ -28,7 +28,7 @@ async def update_modul_channels(interaction: discord.Interaction, attachment: di
             if modul["Modul"] == channel.name:
                 x = True
                 await edit_per_channel(channel, r)
-                print(f"U {channel.name}, {r.name}")
+                print(f"M {channel.name}, {r.name}")
 
         if not x:
             missingmoduls.append(modul)
@@ -54,7 +54,7 @@ async def create_modul_channels_list(interaction: discord.Interaction, category:
     channels =  category.text_channels
     textchannels= [channel.name for channel in channels]
     message = await interaction.channel.fetch_message(msgid)
-    moduls = message.content.split('\n')
+    moduls = message.content.lower().replace(" ", "-").split('\n')
 
 
     for modul in moduls:
@@ -67,4 +67,9 @@ async def create_modul_channels_list(interaction: discord.Interaction, category:
 
             await category.create_text_channel(name=modul, overwrites=overwrites)
             print(f"C {modul}, {[role.name for role in roles]}")
+        if modul in textchannels:
+            channel = discord.utils.get(guild.channels, name=modul)
+            for role in roles:
+                await edit_per_channel(channel, role)
+                print(f"M {channel.name}, {role.name}")
     return
