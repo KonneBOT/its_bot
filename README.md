@@ -45,7 +45,8 @@ Takes a *Modulhandbuch* pdf as arg and a *bool* whether or not the bot should cr
 ### /update_channels_list 
 
 Takes a *category* as arg and a *message.id* to create channels
-First send a message with all the modul names.
+
+First send a message with all the modul names.</br>
 For example: </br>
 <sub> Wahlpflichtmodule WS2025/2026</sub>
 ```
