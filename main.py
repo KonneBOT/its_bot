@@ -2,13 +2,12 @@ import os
 from dotenv import load_dotenv
 
 import discord
-from discord.ext import commands
 from discord import app_commands
 
 from RoleSelection import RoleSelectView
 from responses import get_response
 from roles import update_sem_roles, remove_old_sem_roles, sort_sem_roles, create_sem_roles, delete_sem_roles
-from channels import  edit_per_channel, update_modul_channels, create_modul_channels_list
+from channels import  edit_per_channel, create_modul_channels_list
 
 # Load Toaken from Safe File
 load_dotenv()
