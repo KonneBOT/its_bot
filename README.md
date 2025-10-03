@@ -30,17 +30,7 @@ Deletes roles in the format of ``[1-7].Sem - [course]`` based on the courses giv
 Sorts all roles into one block to clean up the role overview
 
 > [!NOTE]
->Currently not working for unkown reason
-
-### /update_channels_pdf  
-*(legacy: use [`update_channels_list`](#update_channels_list) instead)*  
-
-Takes a *Modulhandbuch* pdf as arg and a *bool* whether or not the bot should create new channels or just eddit the matching existing ones and assign roles to them.
-
-> [!CAUTION]
-> Don't use it without knowing how the PDF should be formatted. That command was specifically designed for the *Modulhandbuch StuPO, 22.2* and **will not work** with others due to formatting changes.
->
-> It can break and consequences are unknown (edit if someones actually trys it)  
+>Currently not working for unknown reason
 
 ### /update_channels_list 
 
@@ -67,11 +57,11 @@ The Bot will now give you the option to select the roles you want to add</br>
 click submit and the bot will add the roles to the allready existing channels and create new channels with the roles for missing ones.
 
 > [!NOTE]
-> + you will need to click somewhere and resive the message ``✅ Stored {len(self.view.selected_ids)} role(s) so far.`` until you can change the page or to submit your choices
+> + you will need to click somewhere and receive the message ``✅ Stored {len(self.view.selected_ids)} role(s) so far.`` until you can change the page or to submit your choices
 > + you can not remove roles ones they have been stored you can only cancel (yet)
 
 > [!WARNING]
-> The editing of existing channels has not been tested yet 
+> The editing of existing channels has not been implemented yet 
 
 ### easter_egg  
 

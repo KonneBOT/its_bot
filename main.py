@@ -149,17 +149,6 @@ async def sort_roles(interaction: discord.Interaction):
     except Exception as e:
         await interaction.edit_original_response(content=f"{e}")
 
-@tree.command(name="update_channels_pdf", description="create or update channels, given from a course catalogue pdf")
-@app_commands.checks.has_permissions(administrator=True)
-async def update_channels_pdf(interaction: discord.Interaction, attachment: discord.Attachment, createnewchannel: bool):
-    try:
-        await interaction.response.send_message("Channel will be updated ...", ephemeral=True)
-        await update_modul_channels(interaction, attachment, createnewchannel)
-        await interaction.edit_original_response(content="Channel have been updated")
-
-    except Exception as e:
-        await interaction.edit_original_response(content=f"{e}")
-
 
 # --- Slash command ---
 @tree.command(name="update_channels_list", description="create or update channels, given from a List")
