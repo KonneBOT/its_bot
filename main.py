@@ -5,6 +5,8 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
+from DiscordClient import client
+
 from RoleSelection import RoleSelectView
 from responses import get_response
 from roles import update_sem_roles, remove_old_sem_roles, sort_sem_roles, create_sem_roles, delete_sem_roles
@@ -16,23 +18,25 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 print(TOKEN)
 
 # Intents Setup
-intents = discord.Intents.all()
-client = discord.Client(intents=intents, command_prefix="uwu")
 tree = app_commands.CommandTree(client)
-GUILD_ID = discord.Object(id="1305824039557791834")
+GUILD_ID = discord.Object(id="1305824039557791834") #Hardcorded Guild id
+zitate_channelid = 1154405716862435418 #Hardcorded Channel id
 
 # Message Functionality
 async def send_message(message: discord.message, user_message: str) -> None:
     if not user_message: # If user_message is empty
         print('(Message is empty, maybe intents not enabled?)')
         return
-    
+
+    #um zu verhindern, dass er im Zitate channel schreibt
+    if message.channel.id == zitate_channelid:
+        return
     # var := user_message == ... ist ein one-liner :)
     if is_private := user_message[0] == '?':    # for private Messages (Start with "?")
         user_message = user_message[1:]         # slice off the "?" 
 
     try:
-        response: str = get_response(user_message)
+        response: str = await get_response(user_message)
         if not response: # If response is empty
             return
         await message.author.send(response) if is_private else await message.channel.send(response)  # If private -> Author, else -> Channel
