@@ -15,7 +15,6 @@ from channels import  edit_per_channel, update_modul_channels, create_modul_chan
 # Load Toaken from Safe File
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-print(TOKEN)
 
 # Intents Setup
 tree = app_commands.CommandTree(client)
